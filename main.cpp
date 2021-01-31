@@ -6,6 +6,9 @@ int main() {
 	noecho();
 	clear();
 	refresh();
+	
+	mvaddstr(10, 10, "Hello World!");
+	refresh();
 
 	bool running = true;
 	while (running) {
