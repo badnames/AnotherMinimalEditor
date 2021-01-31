@@ -1,5 +1,21 @@
-#include <iostream>
+#include <curses.h>
 
 int main() {
-	std::cout << "Hello World" << std::endl;
+	initscr();
+	cbreak();
+	noecho();
+	clear();
+	refresh();
+
+	bool running = true;
+	while (running) {
+		char input = getch();
+		if (input == 'q') {
+			running = false;
+		}
+	}
+
+	endwin();
+
+	return 0;
 }

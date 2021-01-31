@@ -1,9 +1,10 @@
 OBJ = main.o
-CC = g++
-FLAGS = -Wall -Wextra -Werror -pedantic
+CXX = g++
+CPPFLAGS = -Wall -Wextra -Werror -pedantic
+LINKERFLAGS = -lcurses
 
 editor : $(OBJ)
-	$(CC) -o editor $(OBJ)
+	$(CXX) -o editor $(OBJ) $(CPPFLAGS) $(LINKERFLAGS)
 
 .PHONY : clean
 
