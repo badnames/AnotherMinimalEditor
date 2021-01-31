@@ -1,4 +1,5 @@
 #include "window.hpp"
+#include <tuple>
 #include <curses.h>
 
 int main() {
@@ -7,12 +8,16 @@ int main() {
 				if (input == 'q') {
 					window->quit();
 				}
+			},
+		      [](Window* window) {
+		      		int x, y;
+				std::tie(x, y) = window->getDimensions();
+				
+				window->setCursor(x / 2, y / 2);
+				window->writeTextAtCursor("Hallo Welt!");
 			});
 			
 
-	mvaddstr(10, 10, "Hello World!");
-	refresh();
-	
 	window.eventLoop();
 	
 	return 0;
