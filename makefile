@@ -1,4 +1,4 @@
-OBJ = main.o window.o
+OBJ = main.o window.o textbuffer.o
 CXX = g++
 CPPFLAGS = -Wall -Wextra -Werror -pedantic
 LINKERFLAGS = -lcurses
