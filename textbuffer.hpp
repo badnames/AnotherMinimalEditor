@@ -3,32 +3,48 @@
 
 #include <string>
 #include <vector>
-#include <stack>
 
 struct PieceTableEntry {
 	bool isInEditBuffer;
-	unsigned int start;
-	unsigned int end;
+	long unsigned int start;
+	long unsigned int end;
 };
 
-// Implements a piece table data structure
+/* Implements a piece table for fast text editing.
+ * */
 class TextBuffer {
 private:
+	// piece table data
 	std::string m_originalText;
 	std::string m_editText;
 	std::vector<PieceTableEntry> m_pieceTable;
 	
-	unsigned int m_lines;
+	//cache data
+	long unsigned int m_lines;
+	bool m_linesValid;
+
+	std::string m_combinedText;
+	bool m_combinedTextValid;
+
+	long unsigned int m_length;
+	bool m_lengthValid;
+
+	long unsigned int countLinesInString(std::string& str);
 public:
-	TextBuffer();
+	TextBuffer(std::string originalText);
 	~TextBuffer();
 
-	std::string getText(int start, int end);
-	unsigned int getLength();	
-	unsigned int getLines();
+	std::string& getText();
 	
-	void addText(std::string text, unsigned int position);
-	void removeText(unsigned int start, unsigned int end);	
+	long unsigned int getLength();	
+	long unsigned int getLines();
+	
+	void addText(std::string text, long unsigned int offset);
+	void removeText(unsigned int start, long unsigned int end);
+	
+	// Throws invalid_argument exception if cursor position
+	// is out of bounds m_lengthValid;.
+	long unsigned int cursorPositionToStringOffset(unsigned int x, unsigned int y);
 };
 
 #endif

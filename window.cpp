@@ -43,7 +43,7 @@ void Window::quit() {
 	m_running = false;
 }
 
-void Window::writeTextAtCursor(std::string text) {
+void Window::writeTextAtCursor(std::string& text) {
 	waddstr(m_window, text.c_str());
 }
 

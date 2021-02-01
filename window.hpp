@@ -29,7 +29,7 @@ public:
 	void quit();
 
 	void setCursor(int x, int y);
-	void writeTextAtCursor(std::string text);
+	void writeTextAtCursor(std::string& text);
 	
 	//coordinate format is x,y instead of curses' y,x
 	std::tuple<int, int> getDimensions();
