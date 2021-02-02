@@ -5,10 +5,6 @@
 TextBuffer::TextBuffer(std::string originalText) {
 	m_originalText = originalText;
 	m_pieceTable.push_back({false, 0, originalText.length()});
-	
-	getLines();
-	getLength();
-	getText();
 }
 
 TextBuffer::~TextBuffer() {}
@@ -23,7 +19,7 @@ void TextBuffer::addText(std::string text, long unsigned int offset) {
 	PieceTableEntry currEntry;
 	
 	// The iterator is needed to remove the old entry later.
-	std::vector<PieceTableEntry>::iterator it = m_pieceTable.begin();;
+	std::vector<PieceTableEntry>::iterator it = m_pieceTable.begin();
 	while (it != m_pieceTable.end()) {
 		currEntry = *it;
 		textLength += currEntry.end - currEntry.start;
@@ -39,14 +35,21 @@ void TextBuffer::addText(std::string text, long unsigned int offset) {
 	if (textLength > offset) {
 		PieceTableEntry newEntryLeft = currEntry;
 		PieceTableEntry newEntryRight = currEntry;
-
-		newEntryLeft.end = offset;
-		newEntryRight.start = offset + 1;
+		
+		auto splitPosition = offset - (textLength - (currEntry.end - currEntry.start));
+		newEntryLeft.end = splitPosition;
+		newEntryRight.start = splitPosition;
 
 		m_pieceTable.erase(it);
-		m_pieceTable.insert(it, newEntryLeft);
-		m_pieceTable.insert(++it, newEntry);
-		m_pieceTable.insert(++it, newEntryRight);
+		if (it == m_pieceTable.end()) {
+			m_pieceTable.push_back(newEntryLeft);
+			m_pieceTable.push_back(newEntry);
+			m_pieceTable.push_back(newEntryRight);
+		} else {
+			m_pieceTable.insert(it, newEntryLeft);
+			m_pieceTable.insert(++it, newEntry);
+			m_pieceTable.insert(++it, newEntryRight);
+		}
 	} else if (textLength == offset) {
 		m_pieceTable.insert(++it, newEntry);
 	}
@@ -74,9 +77,9 @@ std::string& TextBuffer::getText() {
 		std::string subString;
 
 		if (entry.isInEditBuffer) {
-			subString = m_editText.substr(entry.start, entry.end);
+			subString = m_editText.substr(entry.start, entry.end - entry.start);
 		} else {
-			subString = m_originalText.substr(entry.start, entry.end);
+			subString = m_originalText.substr(entry.start, entry.end - entry.start);
 		}
 
 		combinedText = combinedText + subString;

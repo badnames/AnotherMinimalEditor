@@ -6,6 +6,7 @@
 
 int main() {
 	std::shared_ptr<TextBuffer> textbuffer(new TextBuffer("Hello World!"));
+	textbuffer->addText("you beuatiful", 4);
 
 	Window window([](Window* window, char input) {
 				if (input == 'q') {

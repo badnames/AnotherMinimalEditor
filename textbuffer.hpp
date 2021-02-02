@@ -20,14 +20,14 @@ private:
 	std::vector<PieceTableEntry> m_pieceTable;
 	
 	//cache data
-	long unsigned int m_lines;
-	bool m_linesValid;
+	long unsigned int m_lines = 0;
+	bool m_linesValid = false;
 
-	std::string m_combinedText;
-	bool m_combinedTextValid;
+	std::string m_combinedText = "";
+	bool m_combinedTextValid = false;
 
-	long unsigned int m_length;
-	bool m_lengthValid;
+	long unsigned int m_length = 0;
+	bool m_lengthValid = false;
 
 	long unsigned int countLinesInString(std::string& str);
 public:
