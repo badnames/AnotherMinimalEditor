@@ -40,7 +40,7 @@ public:
 	long unsigned int getLines();
 	
 	void addText(std::string text, long unsigned int offset);
-	void removeText(unsigned int start, long unsigned int end);
+	void removeText(long unsigned int start, long unsigned int end);
 	
 	// Throws invalid_argument exception if cursor position
 	// is out of bounds m_lengthValid;.

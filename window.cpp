@@ -6,11 +6,12 @@
 
 #include <curses.h>
 
-Window::Window(std::function<void(Window*, char)> onCharPressed,
+Window::Window(std::function<void(Window*, int)> onCharPressed,
 	       std::function<void(Window*)> onUpdate) {
 	m_window = initscr();
 	cbreak();
 	noecho();
+	keypad(m_window, true);
 	clear();
 	refresh();
 	

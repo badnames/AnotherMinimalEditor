@@ -32,7 +32,21 @@ void testTextBufferAddText() {
 	std::cout << "DONE" << std::endl;
 }
 
+void testTextBufferRemoveText() {
+	std::cout << "Testing textbuffer.removeText()...";
+
+	TextBuffer textbuffer("Hello World!");
+	textbuffer.addText("Test ", 6);
+	textbuffer.removeText(0, 6);
+	
+	std::string test3("Test World!");
+	assert(test3.compare(textbuffer.getText()) == 0);
+
+	std::cout << "DONE" << std::endl;
+}
+
 int main() {
 	testTextBufferConstructor();
 	testTextBufferAddText();
+	testTextBufferRemoveText();
 }

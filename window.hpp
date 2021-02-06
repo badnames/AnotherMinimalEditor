@@ -17,11 +17,11 @@ private:
 	
 	// callbacks
 	// executed when getch() returns a key
-	std::function<void(Window*, char)> m_onCharPressed;
+	std::function<void(Window*, int)> m_onCharPressed;
 	//executed every time the window should be redrawn
 	std::function<void(Window*)> m_onUpdate;
 public:
-	Window(std::function<void(Window*, char)> onCharPressed,
+	Window(std::function<void(Window*, int)> onCharPressed,
 	       std::function<void(Window*)> onUpdate);
 	~Window();
 

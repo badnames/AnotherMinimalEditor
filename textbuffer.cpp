@@ -91,6 +91,41 @@ std::string& TextBuffer::getText() {
 	return m_combinedText;
 }
 
+void TextBuffer::removeText(long unsigned int start, long unsigned int end) {
+	
+	//find the first entry that contains text that should be removed
+	auto it = m_pieceTable.begin();
+	long unsigned int charCount = 0;
+
+	while (it != m_pieceTable.end()) {
+		auto relativeStart = start - charCount;
+		auto relativeEnd = end - charCount;
+		
+		// skip all entries before until the first one that needs to be changed
+		if (charCount < start)
+			continue;
+		
+		
+		if (it->start < relativeStart && it->end <= relativeEnd) {
+			it->end = relativeStart;
+		} else if (it->start >= relativeStart && it->end <= relativeEnd) {
+			m_pieceTable.erase(it);	
+		} else if (it->start >= relativeStart && it->end > relativeEnd) {
+			it->start = relativeEnd;
+			break;
+		}
+		
+		charCount += it->end - it->start;
+		it++;
+	}
+
+	// invalidate chaches
+	m_linesValid = false;
+	m_combinedTextValid = false;
+	m_lengthValid = false;
+	
+}
+
 long unsigned int TextBuffer::getLength() {
 	if (m_lengthValid) {
 		return m_length;

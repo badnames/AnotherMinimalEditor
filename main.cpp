@@ -8,13 +8,24 @@
 int main() {
 	std::shared_ptr<TextBuffer> textbuffer(new TextBuffer(""));
 
-	Window window([textbuffer](Window* window, char input) {
+	Window window([textbuffer](Window* window, int input) {
 				//esc key
-				if (input == 27) {
-					window->quit();
+				switch (input) {
+					//case
+					case 27:
+						window->quit();
+						break;
+					
+					//backspace
+					case KEY_BACKSPACE:
+						textbuffer->removeText(textbuffer->getLength() - 1L, textbuffer->getLength());
+					break;
+
+					default:
+						textbuffer->addText(std::string(1, input), textbuffer->getLength());
+						break;
 				}
 
-				textbuffer->addText(std::string(1, input), textbuffer->getLength());
 			},
 		      [textbuffer](Window* window) {
 		      		int x, y;
