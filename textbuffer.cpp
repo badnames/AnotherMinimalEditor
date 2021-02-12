@@ -11,31 +11,31 @@ TextBuffer::~TextBuffer() {}
 
 void TextBuffer::addText(std::string text, long unsigned int offset) {
 	PieceTableEntry newEntry = {true, m_editText.length(), m_editText.length() + text.length()}; 
-	
+
 	m_editText = m_editText + text;
 
 	// Find out which entry needs to be modified.
 	long unsigned int textLength = 0;
 	PieceTableEntry currEntry;
-	
+
 	// The iterator is needed to remove the old entry later.
 	std::vector<PieceTableEntry>::iterator it = m_pieceTable.begin();
 	while (it != m_pieceTable.end()) {
 		currEntry = *it;
 		textLength += currEntry.end - currEntry.start;
-		
+
 		if (textLength >= offset) {
 			break;
 		}
 
 		it++;
 	}
-	
+
 	// Split the old entry if required
 	if (textLength > offset) {
 		PieceTableEntry newEntryLeft = currEntry;
 		PieceTableEntry newEntryRight = currEntry;
-		
+
 		auto splitPosition = offset - (textLength - (currEntry.end - currEntry.start));
 		newEntryLeft.end = splitPosition;
 		newEntryRight.start = splitPosition;
@@ -53,7 +53,7 @@ void TextBuffer::addText(std::string text, long unsigned int offset) {
 	} else if (textLength == offset) {
 		m_pieceTable.insert(++it, newEntry);
 	}
-	
+
 	// update caches
 	if (m_linesValid) {
 		m_lines += TextBuffer::countLinesInString(text);
@@ -92,7 +92,7 @@ std::string& TextBuffer::getText() {
 }
 
 void TextBuffer::removeText(long unsigned int start, long unsigned int end) {
-	
+
 	//find the first entry that contains text that should be removed
 	auto it = m_pieceTable.begin();
 	long unsigned int charCount = 0;
@@ -100,21 +100,21 @@ void TextBuffer::removeText(long unsigned int start, long unsigned int end) {
 	while (it != m_pieceTable.end()) {
 		auto relativeStart = start - charCount;
 		auto relativeEnd = end - charCount;
-		
+
 		// skip all entries before until the first one that needs to be changed
 		if (charCount < start)
 			continue;
-		
-		
+
+
 		if (it->start < relativeStart && it->end <= relativeEnd) {
 			it->end = relativeStart;
 		} else if (it->start >= relativeStart && it->end <= relativeEnd) {
-			m_pieceTable.erase(it);	
+			m_pieceTable.erase(it);
 		} else if (it->start >= relativeStart && it->end > relativeEnd) {
 			it->start = relativeEnd;
 			break;
 		}
-		
+
 		charCount += it->end - it->start;
 		it++;
 	}
@@ -123,7 +123,53 @@ void TextBuffer::removeText(long unsigned int start, long unsigned int end) {
 	m_linesValid = false;
 	m_combinedTextValid = false;
 	m_lengthValid = false;
-	
+
+}
+
+void TextBuffer::removeCharAt(long unsigned int location) {
+	if (location == 0 || location > getLength()) {
+		return;
+	}
+
+	auto it = m_pieceTable.begin();
+	auto charCount = it->end - it->start;
+
+	while (it != m_pieceTable.end() && charCount < location) {
+		it++;
+		charCount += it->end - it->start;
+	}
+
+	// invalidate chaches
+	m_linesValid = false;
+	m_combinedTextValid = false;
+	m_lengthValid = false;
+
+	// if the entry is only one character long, there is no need to split it
+	if (it->end - it->start == 1) {
+		m_pieceTable.erase(it);
+		return;
+	}
+
+	auto relativeLocation = it->end - (charCount - location);
+
+	auto leftEntry = *it;
+	auto rightEntry = *it;
+
+	leftEntry.end = relativeLocation;
+	rightEntry.start = relativeLocation + 1;
+
+	m_pieceTable.erase(it);
+
+	// the start and end indecies are unsigned integers
+	if (rightEntry.end > rightEntry.start  && (rightEntry.end - rightEntry.start) != 0) {
+		m_pieceTable.insert(it, rightEntry);
+	}
+
+	if ((leftEntry.end > leftEntry.start && leftEntry.end - leftEntry.start) != 0) {
+		m_pieceTable.insert(it, leftEntry);
+	}
+
+
 }
 
 long unsigned int TextBuffer::getLength() {
@@ -147,7 +193,7 @@ long unsigned int TextBuffer::getLines() {
 		m_lines = TextBuffer::countLinesInString(m_combinedText);
 		m_linesValid = true;
 	}
-	
+
 	return m_lines;
 }
 
@@ -157,7 +203,7 @@ long unsigned int TextBuffer::cursorPositionToStringOffset(unsigned int x, unsig
 	}
 
 	std::string& text = getText();
-	long unsigned int length = 0;	
+	long unsigned int length = 0;
 
 	for (long unsigned int i = 0; i < text.length(); i++) {
 		length++;

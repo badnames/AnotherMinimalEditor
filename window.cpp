@@ -33,7 +33,7 @@ void Window::eventLoop() {
 		if(input != KEY_RESIZE) {
 			m_onCharPressed(this, input);
 		}
-		
+
 		clear();
 		m_onUpdate(this);
 		refresh();
@@ -49,19 +49,19 @@ void Window::writeTextAtCursor(std::string& text) {
 }
 
 void Window::setCursor(int x, int y) {
-	wmove(m_window, y, x);	
+	wmove(m_window, y, x);
 }
 
 std::tuple<int, int> Window::getDimensions() {
 	int x, y;
-	
+
 	getmaxyx(m_window, y, x);
 	return {x, y};
 }
 
 std::tuple<int, int> Window::getCursorPosition() {
 	int x, y;
-	
+
 	getyx(m_window, y, x);
 	return {x, y};
 }

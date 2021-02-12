@@ -15,11 +15,11 @@ int main() {
 					case 27:
 						window->quit();
 						break;
-					
+
 					//backspace
 					case KEY_BACKSPACE:
-						textbuffer->removeText(textbuffer->getLength() - 1L, textbuffer->getLength());
-					break;
+						textbuffer->removeCharAt(textbuffer->getLength());
+						break;
 
 					default:
 						textbuffer->addText(std::string(1, input), textbuffer->getLength());
@@ -30,11 +30,11 @@ int main() {
 		      [textbuffer](Window* window) {
 		      		int x, y;
 				std::tie(x, y) = window->getDimensions();
-				
+
 				window->setCursor(0, 0);
 				window->writeTextAtCursor(textbuffer->getText());
 			});
-			
+
 
 	window.eventLoop();
 	

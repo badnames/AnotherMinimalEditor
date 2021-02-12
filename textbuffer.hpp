@@ -35,13 +35,15 @@ public:
 	~TextBuffer();
 
 	std::string& getText();
-	
-	long unsigned int getLength();	
+
+	long unsigned int getLength();
 	long unsigned int getLines();
-	
+
 	void addText(std::string text, long unsigned int offset);
 	void removeText(long unsigned int start, long unsigned int end);
-	
+
+	void removeCharAt(long unsigned int location);
+
 	// Throws invalid_argument exception if cursor position
 	// is out of bounds m_lengthValid;.
 	long unsigned int cursorPositionToStringOffset(unsigned int x, unsigned int y);
